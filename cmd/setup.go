@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/JVitoroliv3ira/termotp/internal/models"
+	"github.com/JVitoroliv3ira/termotp/internal/storage"
 	"github.com/JVitoroliv3ira/termotp/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,8 @@ var setupCmd = &cobra.Command{
 			CreatedAt: time.Now(),
 		}
 
-		fmt.Printf("Conta '%s' cadastrada com sucesso com a senha '%s'\n", account.Name, password)
+		utils.HandleError(storage.SaveAccount(account, password))
+		fmt.Printf("\nConta '%s' cadastrada e armazenada com segurança!\n", account.Name)
 	},
 }
 
