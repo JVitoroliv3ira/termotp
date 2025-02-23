@@ -128,3 +128,18 @@ func LoadAccounts(password string) (models.StorageData, error) {
 
 	return storageData, nil
 }
+
+func GetAccount(name, password string) (models.Account, error) {
+	storageData, err := LoadAccounts(password)
+
+	if err != nil {
+		return models.Account{}, nil
+	}
+
+	account, exists := storageData.Accounts[name]
+	if !exists {
+		return models.Account{}, errors.New("conta não encontrada")
+	}
+
+	return account, nil
+}
