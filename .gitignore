@@ -1,0 +1,32 @@
+# Binários compilados do Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+*.o
+*.a
+
+# Dependências baixadas pelo Go
+/bin/
+/pkg/
+/vendor/
+
+# Arquivos temporários e caches do Go
+*.log
+*.test
+*.prof
+*.mod
+*.sum
+*.tmp
+
+# Configuração de IDEs e editores de código
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de sistema do macOS e Linux
+.DS_Store
+Thumbs.db
