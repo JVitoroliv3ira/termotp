@@ -19,7 +19,10 @@ var setupCmd = &cobra.Command{
 	Long:  "Cadastra um novo serviço TOTP, armazenando sua chave de forma segura.",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.HandleError(utils.ValidateServiceName(setupName))
-		utils.HandleError(utils.ValidateServiceSecret(setupSecret))
+
+		secret, err := utils.PromptSecret()
+		utils.HandleError(err)
+		utils.HandleError(utils.ValidateServiceSecret(secret))
 
 		password, err := utils.PromptPassword()
 		utils.HandleError(err)
@@ -39,5 +42,4 @@ var setupCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(setupCmd)
 	setupCmd.Flags().StringVarP(&setupName, "name", "n", "", "Nome da conta (ex: gitlab)")
-	setupCmd.Flags().StringVarP(&setupSecret, "secret", "s", "", "Chave secreta TOTP")
 }
