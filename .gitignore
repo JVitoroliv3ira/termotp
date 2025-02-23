@@ -27,3 +27,7 @@
 # Arquivos de sistema do macOS e Windows
 .DS_Store
 Thumbs.db
+
+# Arquivos criptografados
+
+*.enc
