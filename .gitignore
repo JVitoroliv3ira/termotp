@@ -8,17 +8,14 @@
 *.o
 *.a
 
-# Dependências baixadas pelo Go
+# Diretórios de build que não precisam ser versionados
 /bin/
 /pkg/
-/vendor/
 
-# Arquivos temporários e caches do Go
+# Arquivos temporários do Go
 *.log
 *.test
 *.prof
-*.mod
-*.sum
 *.tmp
 
 # Configuração de IDEs e editores de código
@@ -27,6 +24,6 @@
 *.swp
 *.swo
 
-# Arquivos de sistema do macOS e Linux
+# Arquivos de sistema do macOS e Windows
 .DS_Store
 Thumbs.db
