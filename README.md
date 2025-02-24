@@ -12,34 +12,41 @@ Com **criptografia AES-256** e suporte a múltiplas contas, ele permite que voc�
 A versão mais recente do **TermOTP** está disponível em **[Releases](https://github.com/JVitoroliv3ira/termotp/releases/latest)**.
 
 ### **🔹 Linux**
+**⚠️ Importante:** Para instalar corretamente, os seguintes comandos devem ser executados no terminal:
+
 ```sh
 # Remover versão antiga (se existir)
-sudo rm -f /usr/local/bin/termotp
+sudo rm -f /usr/local/bin/totp
 
-# Baixar a nova versão
-wget https://github.com/JVitoroliv3ira/termotp/releases/latest/download/termotp-linux-amd64 -O termotp
+# Baixar a nova versão do TermOTP
+wget https://github.com/JVitoroliv3ira/termotp/releases/latest/download/totp-linux-amd64 -O totp
 
-# Tornar executável e mover para /usr/local/bin
-chmod +x termotp
-sudo mv termotp /usr/local/bin/
+# Dar permissão de execução ao binário
+chmod +x totp
+
+# Mover o executável para um local acessível globalmente (precisa de sudo)
+sudo mv totp /usr/local/bin/
 ```
-Agora, basta rodar `termotp` de qualquer lugar no terminal! 🚀
+**Agora você pode executar `totp` de qualquer lugar no terminal!** 🚀
 
 ### **🔹 Windows**
-```powershell
-# Remover versão antiga (se existir)
-Remove-Item "C:\Program Files\TermOTP\termotp.exe" -ErrorAction SilentlyContinue
+**⚠️ Importante:** Para instalar, execute o PowerShell como **Administrador** antes de rodar os comandos abaixo!
 
-# Criar diretório se não existir
+```powershell
+# Remover versão antiga, se existir
+Remove-Item "C:\Program Files\TermOTP\totp.exe" -ErrorAction SilentlyContinue
+
+# Criar diretório de instalação (caso ainda não exista)
 mkdir "C:\Program Files\TermOTP" -ErrorAction SilentlyContinue
 
-# Baixar a nova versão
-Invoke-WebRequest -Uri "https://github.com/JVitoroliv3ira/termotp/releases/latest/download/termotp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\termotp.exe"
+# Baixar a nova versão do TermOTP
+Invoke-WebRequest -Uri "https://github.com/JVitoroliv3ira/termotp/releases/latest/download/totp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\totp.exe"
 
-# Adicionar ao PATH (se ainda não estiver)
+# Adicionar TOTP ao PATH do sistema
 [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Program Files\TermOTP", [System.EnvironmentVariableTarget]::Machine)
 ```
-Após isso, reinicie o terminal e rode `termotp` de qualquer lugar! 🎉
+
+**Agora reinicie o terminal e rode `totp` de qualquer lugar!** 🎉
 
 ---
 
@@ -47,15 +54,15 @@ Após isso, reinicie o terminal e rode `termotp` de qualquer lugar! 🎉
 Após instalar o **TermOTP**, você pode rodar o seguinte comando para ver todas as opções disponíveis:
 
 ```sh
-termotp --help
+totp --help
 ```
 
 ### **Comandos Disponíveis**
-- **Gerar um código TOTP:** `termotp generate`
-- **Copiar um código sem exibir:** `termotp copy`
-- **Listar todas as contas e códigos:** `termotp list`
-- **Adicionar uma nova conta:** `termotp setup`
-- **Ver a versão instalada:** `termotp version`
+- **Gerar um código TOTP:** `totp generate`
+- **Copiar um código sem exibir:** `totp copy`
+- **Listar todas as contas e códigos:** `totp list`
+- **Adicionar uma nova conta:** `totp setup`
+- **Ver a versão instalada:** `totp version`
 
 Para mais detalhes sobre os comandos, acesse a **[documentação completa](https://github.com/JVitoroliv3ira/termotp/wiki)**.
 

@@ -37,15 +37,15 @@ jobs:
 
       - name: Compilar Binário
         run: |
-          BIN_NAME="termotp-${{ matrix.os }}-${{ matrix.arch }}"
+          BIN_NAME="totp-${{ matrix.os }}-${{ matrix.arch }}"
           if [ "${{ matrix.os }}" = "windows" ]; then BIN_NAME="${BIN_NAME}.exe"; fi
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -ldflags "-X 'github.com/JVitoroliv3ira/termotp/internal/version.Version=${VERSION}'" -o $BIN_NAME
 
       - name: Criar Artefatos
         uses: actions/upload-artifact@v4
         with:
-          name: termotp-${{ matrix.os }}-${{ matrix.arch }}
-          path: termotp-${{ matrix.os }}-${{ matrix.arch }}*
+          name: totp-${{ matrix.os }}-${{ matrix.arch }}
+          path: totp-${{ matrix.os }}-${{ matrix.arch }}*
 
   release:
     name: Criar Release no GitHub
@@ -69,32 +69,52 @@ jobs:
           body: |
             # 🚀 TermOTP - Versão ${{ github.ref_name }}
 
-            TermOTP é um gerador de códigos TOTP no terminal, ideal para autenticação 2FA.
+            **TermOTP** é um gerador de códigos TOTP no terminal, ideal para autenticação 2FA.
 
             ## 📥 Como Instalar
             
             ### 🔹 **Linux**
+            **⚠️ Importante:** Para instalar corretamente, os seguintes comandos devem ser executados no terminal:
+
             ```sh
-            sudo rm -f /usr/local/bin/termotp
-            wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/termotp-linux-amd64 -O termotp
-            chmod +x termotp
-            sudo mv termotp /usr/local/bin/
+            # Remover versão antiga, se existir
+            sudo rm -f /usr/local/bin/totp
+
+            # Baixar a versão mais recente do TermOTP
+            wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/totp-linux-amd64 -O totp
+
+            # Dar permissão de execução ao binário
+            chmod +x totp
+
+            # Mover o executável para um local acessível globalmente (precisa de sudo)
+            sudo mv totp /usr/local/bin/
             ```
 
+            **Agora você pode executar `totp` de qualquer lugar no terminal!** 🚀
+
             ### 🔹 **Windows**
+            **⚠️ Importante:** Para instalar, execute o PowerShell como **Administrador** antes de rodar os comandos abaixo!
+
             ```powershell
-            Remove-Item "C:\Program Files\TermOTP\termotp.exe" -ErrorAction SilentlyContinue
+            # Remover versão antiga, se existir
+            Remove-Item "C:\Program Files\TermOTP\totp.exe" -ErrorAction SilentlyContinue
+
+            # Criar pasta de instalação (caso ainda não exista)
             mkdir "C:\Program Files\TermOTP" -ErrorAction SilentlyContinue
-            Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/termotp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\termotp.exe"
+
+            # Baixar a versão mais recente do TermOTP
+            Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/totp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\totp.exe"
+
+            # Adicionar TOTP ao PATH do sistema
             [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Program Files\TermOTP", [System.EnvironmentVariableTarget]::Machine)
             ```
 
-            **Agora reinicie o terminal e rode `termotp` de qualquer lugar!** 🚀
+            **Agora reinicie o terminal e rode `totp` de qualquer lugar!** 🚀
 
-            ## 📖 Como Usar
-            - **Adicionar uma conta**: `termotp setup --name gitlab`
-            - **Gerar um código**: `termotp list`
-            - **Copiar um código para o clipboard**: `termotp copy --name gitlab`
+            ## 📖 Como Usar o TermOTP
+            - **Adicionar uma conta**: `totp setup --name google`
+            - **Listar códigos TOTP**: `totp list`
+            - **Copiar um código para o clipboard**: `totp copy --name google`
 
             🔹 *Se curtiu, deixa uma ⭐ no repositório!*
           files: artifacts/**
