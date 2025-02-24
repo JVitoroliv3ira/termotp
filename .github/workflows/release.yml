@@ -22,10 +22,14 @@ jobs:
       - name: Configurar Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.20
+          go-version: 1.24
+          check-latest: true
 
-      - name: Verificar dependências
-        run: go mod tidy
+      - name: Verificar versão do Go e dependências
+        run: |
+          go version
+          go env
+          go mod tidy
 
       - name: Obter versão do Git Tag
         id: get_version
@@ -33,13 +37,15 @@ jobs:
 
       - name: Compilar Binário
         run: |
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -ldflags "-X 'github.com/JVitoroliv3ira/termotp/internal/version.Version=${VERSION}'" -o termotp-${{ matrix.os }}-${{ matrix.arch }}
+          BIN_NAME="termotp-${{ matrix.os }}-${{ matrix.arch }}"
+          if [ "${{ matrix.os }}" = "windows" ]; then BIN_NAME="${BIN_NAME}.exe"; fi
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -ldflags "-X 'github.com/JVitoroliv3ira/termotp/internal/version.Version=${VERSION}'" -o $BIN_NAME
 
       - name: Criar Artefatos
         uses: actions/upload-artifact@v4
         with:
           name: termotp-${{ matrix.os }}-${{ matrix.arch }}
-          path: termotp-${{ matrix.os }}-${{ matrix.arch }}
+          path: termotp-${{ matrix.os }}-${{ matrix.arch }}*
 
   release:
     name: Criar Release no GitHub
