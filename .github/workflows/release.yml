@@ -51,6 +51,8 @@ jobs:
     name: Criar Release no GitHub
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout código-fonte
@@ -95,4 +97,4 @@ jobs:
             🔹 *Se curtiu, deixa uma ⭐ no repositório!*
           files: artifacts/**
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
