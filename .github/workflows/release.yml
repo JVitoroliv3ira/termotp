@@ -75,6 +75,7 @@ jobs:
             
             ### 🔹 **Linux**
             ```sh
+            sudo rm -f /usr/local/bin/termotp
             wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/termotp-linux-amd64 -O termotp
             chmod +x termotp
             sudo mv termotp /usr/local/bin/
@@ -82,6 +83,7 @@ jobs:
 
             ### 🔹 **Windows**
             ```powershell
+            Remove-Item "C:\Program Files\TermOTP\termotp.exe" -ErrorAction SilentlyContinue
             mkdir "C:\Program Files\TermOTP" -ErrorAction SilentlyContinue
             Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/termotp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\termotp.exe"
             [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Program Files\TermOTP", [System.EnvironmentVariableTarget]::Machine)
