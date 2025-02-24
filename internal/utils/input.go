@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 	"syscall"
 
 	"golang.org/x/term"
@@ -24,5 +25,11 @@ func PromptPassword() (string, error) {
 }
 
 func PromptSecret() (string, error) {
-	return PromptHiddenInput("Digite o Secret TOTP: ")
+	secret, err := PromptHiddenInput("Digite o Secret TOTP: ")
+	if err != nil {
+		return "", err
+	}
+
+	cleanedSecret := strings.ToUpper(strings.ReplaceAll(secret, " ", ""))
+	return cleanedSecret, nil
 }
