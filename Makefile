@@ -1,6 +1,6 @@
 VERSION := $(shell git describe --tags --always || echo "dev")
 
-BINARY_NAME = termotp
+BINARY_NAME = totp
 
 BUILD_DIR = build
 
@@ -14,6 +14,9 @@ help:
 	@echo "Comandos disponíveis:"
 	@echo "  make build        - Compila o projeto para a plataforma atual"
 	@echo "  make release      - Compila binários para Linux, macOS e Windows"
+	@echo "  make build-linux  - Compila o binário para Linux"
+	@echo "  make build-mac    - Compila o binário para macOS"
+	@echo "  make build-win    - Compila o binário para Windows"
 	@echo "  make clean        - Remove os binários compilados"
 	@echo "  make version      - Exibe a versão atual do projeto"
 
@@ -23,6 +26,24 @@ build:
 	go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)
 	@echo "✅ Build concluído: $(BUILD_DIR)/$(BINARY_NAME)"
 
+build-linux:
+	@echo "🐧 Compilando para Linux..."
+	mkdir -p $(BUILD_DIR)
+	GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
+	@echo "✅ Build para Linux concluído: $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64"
+
+build-mac:
+	@echo "🍏 Compilando para macOS..."
+	mkdir -p $(BUILD_DIR)
+	GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-macos-amd64
+	@echo "✅ Build para macOS concluído: $(BUILD_DIR)/$(BINARY_NAME)-macos-amd64"
+
+build-win:
+	@echo "🖥️ Compilando para Windows..."
+	mkdir -p $(BUILD_DIR)
+	GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe
+	@echo "✅ Build para Windows concluído: $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe"
+
 release: clean
 	@echo "🚀 Criando release para versão $(VERSION)..."
 	mkdir -p $(BUILD_DIR)
@@ -30,7 +51,7 @@ release: clean
 		$(eval GOOS=$(word 1,$(subst /, ,$(platform)))) \
 		$(eval GOARCH=$(word 2,$(subst /, ,$(platform)))) \
 		echo "🔹 Compilando para $(GOOS)/$(GOARCH)..." && \
-		GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-$(GOOS)-$(GOARCH); \
+		GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-$(GOOS)-$(GOARCH)$(if $(filter windows,$(GOOS)),.exe,); \
 	)
 	@echo "✅ Todos os binários foram gerados em $(BUILD_DIR)/"
 
