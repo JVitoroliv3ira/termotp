@@ -1,0 +1,102 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' 
+
+jobs:
+  build:
+    name: Build Binaries
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [linux, windows]
+        arch: [amd64]
+
+    steps:
+      - name: Checkout código-fonte
+        uses: actions/checkout@v4
+
+      - name: Configurar Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.24
+          check-latest: true
+
+      - name: Verificar versão do Go e dependências
+        run: |
+          go version
+          go env
+          go mod tidy
+
+      - name: Obter versão do Git Tag
+        id: get_version
+        run: echo "VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
+
+      - name: Compilar Binário
+        run: |
+          BIN_NAME="termotp-${{ matrix.os }}-${{ matrix.arch }}"
+          if [ "${{ matrix.os }}" = "windows" ]; then BIN_NAME="${BIN_NAME}.exe"; fi
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -ldflags "-X 'github.com/JVitoroliv3ira/termotp/internal/version.Version=${VERSION}'" -o $BIN_NAME
+
+      - name: Criar Artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: termotp-${{ matrix.os }}-${{ matrix.arch }}
+          path: termotp-${{ matrix.os }}-${{ matrix.arch }}*
+
+  release:
+    name: Criar Release no GitHub
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout código-fonte
+        uses: actions/checkout@v4
+
+      - name: Obter Artefatos dos Builds
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Criar Release com Instruções de Instalação
+        uses: softprops/action-gh-release@v2
+        with:
+          body: |
+            # 🚀 TermOTP - Versão ${{ github.ref_name }}
+
+            TermOTP é um gerador de códigos TOTP no terminal, ideal para autenticação 2FA.
+
+            ## 📥 Como Instalar
+            
+            ### 🔹 **Linux**
+            ```sh
+            sudo rm -f /usr/local/bin/termotp
+            wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/termotp-linux-amd64 -O termotp
+            chmod +x termotp
+            sudo mv termotp /usr/local/bin/
+            ```
+
+            ### 🔹 **Windows**
+            ```powershell
+            Remove-Item "C:\Program Files\TermOTP\termotp.exe" -ErrorAction SilentlyContinue
+            mkdir "C:\Program Files\TermOTP" -ErrorAction SilentlyContinue
+            Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/termotp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\termotp.exe"
+            [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Program Files\TermOTP", [System.EnvironmentVariableTarget]::Machine)
+            ```
+
+            **Agora reinicie o terminal e rode `termotp` de qualquer lugar!** 🚀
+
+            ## 📖 Como Usar
+            - **Adicionar uma conta**: `termotp setup --name gitlab`
+            - **Gerar um código**: `termotp list`
+            - **Copiar um código para o clipboard**: `termotp copy --name gitlab`
+
+            🔹 *Se curtiu, deixa uma ⭐ no repositório!*
+          files: artifacts/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}

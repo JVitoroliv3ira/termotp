@@ -1,57 +1,81 @@
-# TermOTP
+# **TermOTP** 🛡️🔑
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Última versão](https://img.shields.io/github/v/release/JVitoroliv3ira/termotp?label=Download)](https://github.com/JVitoroliv3ira/termotp/releases/latest)
 
-**TermOTP** é uma ferramenta de linha de comando (CLI) para gerenciar e gerar códigos **TOTP** (Time-based One-Time Password).  
-O objetivo é unificar tokens de diversos serviços (Google Authenticator, Microsoft Authenticator etc.) e permitir a criação de novos tokens diretamente no terminal.
-
----
-
-## Recursos Principais
-
-- **Importar tokens** via links `otpauth-migration://offline?data=...`.  
-- **Listar** contas TOTP e gerar códigos atualizados no terminal.  
-- **Criar** novas contas (secrets) para habilitar 2FA em qualquer serviço compatível com TOTP.  
-- Possível **integração** com armazenamento seguro (ex.: GPG, `pass`, Keepass).  
-- **Extensibilidade** para diferentes fluxos e necessidades de autenticação.
+**TermOTP** é uma ferramenta de linha de comando (**CLI**) para **gerenciar e gerar códigos TOTP** (Time-based One-Time Password) de forma **segura** e **offline**.  
+Com **criptografia AES-256** e suporte a múltiplas contas, ele permite que você centralize tokens de autenticação de diversos serviços diretamente no terminal.
 
 ---
 
-## Roadmap
+## **📥 Instalação**
+A versão mais recente do **TermOTP** está disponível em **[Releases](https://github.com/JVitoroliv3ira/termotp/releases/latest)**.
 
-- [ ] Implementar importação de tokens usando Protobuf.  
-- [ ] Suportar múltiplas contas em um arquivo ou vault (listagem detalhada).  
-- [ ] Gerar QR codes para facilitar configuração em outros dispositivos.  
-- [ ] Integrações com serviços de armazenamento seguro de senhas.  
-- [ ] Interface CLI aprimorada (cores, prompts interativos, etc.).
+### **🔹 Linux**
+```sh
+# Remover versão antiga (se existir)
+sudo rm -f /usr/local/bin/termotp
 
----
+# Baixar a nova versão
+wget https://github.com/JVitoroliv3ira/termotp/releases/latest/download/termotp-linux-amd64 -O termotp
 
-## Contribuindo
+# Tornar executável e mover para /usr/local/bin
+chmod +x termotp
+sudo mv termotp /usr/local/bin/
+```
+Agora, basta rodar `termotp` de qualquer lugar no terminal! 🚀
 
-1. Faça um **fork** deste repositório.  
-2. Crie um branch para sua nova feature ou correção de bug:
-   ```bash
-   git checkout -b minha-feature
-   ```
-3. Após realizar as alterações, faça commits com mensagens claras:
-   ```bash
-   git commit -m "Descreva a mudança"
-   ```
-4. Envie seu branch para o GitHub:
-   ```bash
-   git push origin minha-feature
-   ```
-5. Abra um **Pull Request** descrevendo as mudanças propostas.
+### **🔹 Windows**
+```powershell
+# Remover versão antiga (se existir)
+Remove-Item "C:\Program Files\TermOTP\termotp.exe" -ErrorAction SilentlyContinue
 
-Contribuições em forma de código, documentação, testes ou sugestões são bem-vindas!
+# Criar diretório se não existir
+mkdir "C:\Program Files\TermOTP" -ErrorAction SilentlyContinue
 
----
+# Baixar a nova versão
+Invoke-WebRequest -Uri "https://github.com/JVitoroliv3ira/termotp/releases/latest/download/termotp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\termotp.exe"
 
-## Licença
-
-Este projeto está disponível sob a **Licença GPLv3**. Consulte o arquivo [LICENSE](./LICENSE) ou acesse a página da [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html) para mais detalhes.
+# Adicionar ao PATH (se ainda não estiver)
+[System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Program Files\TermOTP", [System.EnvironmentVariableTarget]::Machine)
+```
+Após isso, reinicie o terminal e rode `termotp` de qualquer lugar! 🎉
 
 ---
 
-**TermOTP** é um projeto **open source** desenvolvido para simplificar e centralizar a gestão de tokens TOTP. Fique à vontade para explorar, contribuir e compartilhar!
+## **🚀 Como Usar**
+Após instalar o **TermOTP**, você pode rodar o seguinte comando para ver todas as opções disponíveis:
+
+```sh
+termotp --help
+```
+
+### **Comandos Disponíveis**
+- **Gerar um código TOTP:** `termotp generate`
+- **Copiar um código sem exibir:** `termotp copy`
+- **Listar todas as contas e códigos:** `termotp list`
+- **Adicionar uma nova conta:** `termotp setup`
+- **Ver a versão instalada:** `termotp version`
+
+Para mais detalhes sobre os comandos, acesse a **[documentação completa](https://github.com/JVitoroliv3ira/termotp/wiki)**.
+
+---
+
+## **📦 Releases**
+A versão mais recente do **TermOTP** pode ser encontrada em **[Releases](https://github.com/JVitoroliv3ira/termotp/releases/latest)**.
+
+Cada versão inclui:
+- Binários pré-compilados para **Linux** e **Windows**.
+- Histórico de mudanças e novas funcionalidades.
+
+---
+
+## **📜 Licença**
+Este projeto é distribuído sob a **Licença GPLv3**.  
+Consulte o arquivo [LICENSE](./LICENSE) ou acesse a [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html) para mais detalhes.
+
+---
+
+## **🌟 Apoie este projeto!**
+Se você gostou do **TermOTP**, deixe uma ⭐ no repositório!  
+Isso ajuda o projeto a crescer e alcançar mais pessoas. 😃🚀
