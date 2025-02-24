@@ -8,12 +8,39 @@ import (
 	"errors"
 	"io"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/JVitoroliv3ira/termotp/internal/models"
 	"golang.org/x/crypto/argon2"
 )
 
-const storageFile = "secrets.enc"
+func getStoragePath() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "secrets.enc"
+	}
+
+	var configDir string
+
+	if runtime.GOOS == "windows" {
+		appData := os.Getenv("APPDATA")
+		if appData == "" {
+			appData = homeDir
+		}
+		configDir = filepath.Join(appData, "TermOTP")
+	} else {
+		configDir = filepath.Join(homeDir, ".config", "termotp")
+	}
+
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return "secrets.enc"
+	}
+
+	return filepath.Join(configDir, "secrets.enc")
+}
+
+var storageFile = getStoragePath()
 
 func deriveKey(password string) []byte {
 	salt := []byte("static-salt")
