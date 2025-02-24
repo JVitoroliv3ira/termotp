@@ -11,7 +11,6 @@ import (
 )
 
 var setupName string
-var setupSecret string
 
 var setupCmd = &cobra.Command{
 	Use:   "setup",
@@ -30,7 +29,7 @@ var setupCmd = &cobra.Command{
 
 		account := models.Account{
 			Name:      setupName,
-			Secret:    setupSecret,
+			Secret:    secret,
 			CreatedAt: time.Now(),
 		}
 
