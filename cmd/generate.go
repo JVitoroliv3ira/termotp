@@ -25,11 +25,11 @@ var generateCmd = &cobra.Command{
 		account, err := storage.GetAccount(generateName, password)
 		utils.HandleError(err)
 
-		code, err := totp.GenerateTOTP(account.Secret)
+		code, secondsRemaining, err := totp.GenerateTOTP(account.Secret)
 		utils.HandleError(err)
 
-		fmt.Printf("Código TOTP para %s: %s\n", account.Name, code)
-		fmt.Printf("Este código é válido por 30 segundos.\n")
+		fmt.Printf("Código TOTP para a conta [%s]: %s\n", account.Name, code)
+		fmt.Printf("Este código é válido por %d %s.\n", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
 	},
 }
 
