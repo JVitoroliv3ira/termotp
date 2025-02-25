@@ -8,7 +8,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "termotp",
+	Use:   "totp",
 	Short: "Gerenciador de códigos TOTP para autenticação 2FA",
 	Long:  "Ferramenta CLI para gerar e gerenciar códigos TOTP de forma segura.",
 	Run: func(cmd *cobra.Command, args []string) {
