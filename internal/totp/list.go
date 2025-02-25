@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/JVitoroliv3ira/termotp/internal/models"
+	"github.com/JVitoroliv3ira/termotp/internal/utils"
 	"github.com/fatih/color"
 )
 
@@ -29,14 +30,12 @@ func ShowTOTPList(storageData models.StorageData) {
 
 	for {
 		clearScreen()
-		now := time.Now()
-		secondsRemaining := 30 - (now.Unix() % 30)
 
 		fmt.Println("\nCódigos TOTP:")
 
 		for _, name := range accountNames {
 			account := storageData.Accounts[name]
-			code, err := GenerateTOTP(account.Secret)
+			code, secondsRemaining, err := GenerateTOTP(account.Secret)
 			if err != nil {
 				fmt.Printf("Erro ao gerar código para %s\n", account.Name)
 				continue
@@ -50,7 +49,7 @@ func ShowTOTPList(storageData models.StorageData) {
 				timerColor = redText
 			}
 
-			timeText := fmt.Sprintf("(Expira em %d %s)", secondsRemaining, pluralize("segundo", "segundos", secondsRemaining))
+			timeText := fmt.Sprintf("(Expira em %d %s)", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
 
 			fmt.Printf("[%s] %s %s\n",
 				cyanText.Sprint(name),
@@ -70,11 +69,4 @@ func ShowTOTPList(storageData models.StorageData) {
 
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
-}
-
-func pluralize(singular, plural string, value int64) string {
-	if value == 1 {
-		return singular
-	}
-	return plural
 }
