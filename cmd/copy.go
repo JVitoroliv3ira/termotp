@@ -25,11 +25,12 @@ var copyCmd = &cobra.Command{
 		account, err := storage.GetAccount(copyName, password)
 		utils.HandleError(err)
 
-		code, err := totp.GenerateTOTP(account.Secret)
+		code, secondsRemaining, err := totp.GenerateTOTP(account.Secret)
 		utils.HandleError(err)
 
 		utils.HandleError(utils.CopyToClipboard(code))
-		fmt.Printf("Código TOTP para %s copiado com sucesso!\n", account.Name)
+		fmt.Printf("Código TOTP para a conta [%s]: %s\n", account.Name, code)
+		fmt.Printf("Este código foi copiado com sucesso e é válido por %d %s.\n", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
 	},
 }
 
