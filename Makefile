@@ -12,6 +12,7 @@ LDFLAGS = -X 'github.com/JVitoroliv3ira/termotp/internal/version.Version=$(VERSI
 
 help:
 	@echo "Comandos disponíveis:"
+	@echo "  make test         - Executa os testes da aplicação"
 	@echo "  make build        - Compila o projeto para a plataforma atual"
 	@echo "  make release      - Compila binários para Linux, macOS e Windows"
 	@echo "  make build-linux  - Compila o binário para Linux"
@@ -19,6 +20,9 @@ help:
 	@echo "  make build-win    - Compila o binário para Windows"
 	@echo "  make clean        - Remove os binários compilados"
 	@echo "  make version      - Exibe a versão atual do projeto"
+
+test:
+	go test -v -cover ./...
 
 build:
 	@echo "🚀 Compilando TermOTP versão $(VERSION)..."
