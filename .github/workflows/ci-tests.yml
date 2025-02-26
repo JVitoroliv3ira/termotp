@@ -1,0 +1,40 @@
+name: Run Tests and Upload Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Go Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.24
+          check-latest: true
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run tests and generate coverage
+        run: go test ./... -coverprofile=coverage.out
+
+      - name: Extract total coverage
+        run: |
+          go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//' > coverage.txt
+
+      - name: Upload coverage percentage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-percentage
+          path: coverage.txt
