@@ -29,6 +29,9 @@ jobs:
       - name: Install xsel (Clipboard support without GUI)
         run: sudo apt-get update && sudo apt-get install -y xsel
 
+      - name: Set DISPLAY environment variable
+        run: echo "DISPLAY=:0" >> $GITHUB_ENV
+
       - name: Run tests and generate coverage
         run: go test ./... -coverprofile=coverage.out
 
