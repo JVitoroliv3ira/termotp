@@ -29,6 +29,12 @@ jobs:
       - name: Run tests and generate coverage
         run: go test ./... -coverprofile=coverage.out
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.out
+          fail_ci_if_error: true
+
       - name: Extract total coverage
         run: |
           go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//' > coverage.txt
