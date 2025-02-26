@@ -34,7 +34,7 @@ jobs:
           go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//' > coverage.txt
 
       - name: Upload coverage percentage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-percentage
           path: coverage.txt
