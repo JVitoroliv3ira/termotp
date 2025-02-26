@@ -2,6 +2,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Última versão](https://img.shields.io/github/v/release/JVitoroliv3ira/termotp?label=Download)](https://github.com/JVitoroliv3ira/termotp/releases/latest)
+[![Go Coverage](https://gocover.io/badge/github.com/JVitoroliv3ira/termotp)](https://gocover.io/github.com/JVitoroliv3ira/termotp)
 
 **TermOTP** é uma ferramenta de linha de comando (**CLI**) para **gerenciar e gerar códigos TOTP** (Time-based One-Time Password) de forma **segura** e **offline**.  
 Com **criptografia AES-256** e suporte a múltiplas contas, ele permite que você centralize tokens de autenticação de diversos serviços diretamente no terminal.
