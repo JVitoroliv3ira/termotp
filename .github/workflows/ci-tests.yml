@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
 
+      - name: Install xclip
+        run: sudo apt-get update && sudo apt-get install -y xclip
+
       - name: Run tests and generate coverage
         run: go test ./... -coverprofile=coverage.out
 
