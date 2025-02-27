@@ -13,8 +13,8 @@ var generateName string
 
 var generateCmd = &cobra.Command{
 	Use:   "generate",
-	Short: "Gera um código TOTP",
-	Long:  "Gera um código TOTP válido para autenticação de dois fatores.",
+	Short: "Gere um código TOTP",
+	Long:  "Gere um código TOTP válido para autenticação em dois fatores (2FA).",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.HandleError(utils.ValidateServiceName(generateName))
 
