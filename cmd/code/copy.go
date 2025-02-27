@@ -1,4 +1,4 @@
-package cmd
+package code
 
 import (
 	"fmt"
@@ -35,6 +35,6 @@ var copyCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(copyCmd)
+	CodeCmd.AddCommand(copyCmd)
 	copyCmd.Flags().StringVarP(&copyName, "name", "n", "", "Nome da conta (ex: gitlab)")
 }
