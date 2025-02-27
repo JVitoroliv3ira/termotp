@@ -1,4 +1,4 @@
-package cmd
+package code
 
 import (
 	"github.com/JVitoroliv3ira/termotp/internal/storage"
@@ -24,5 +24,5 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	CodeCmd.AddCommand(listCmd)
 }
