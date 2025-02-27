@@ -1,4 +1,4 @@
-package cmd
+package code
 
 import (
 	"fmt"
@@ -34,6 +34,6 @@ var generateCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(generateCmd)
+	CodeCmd.AddCommand(generateCmd)
 	generateCmd.Flags().StringVarP(&generateName, "name", "n", "", "Nome da conta (ex: gitlab)")
 }
