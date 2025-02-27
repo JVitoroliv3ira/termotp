@@ -132,6 +132,20 @@ func SaveAccount(account models.Account, password string) error {
 	return os.WriteFile(storageFile, encryptedData, 0644)
 }
 
+func SaveAccounts(storageData models.StorageData, password string) error {
+	jsonData, err := json.Marshal(storageData)
+	if err != nil {
+		return err
+	}
+
+	encryptedData, err := Encrypt(jsonData, password)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(storageFile, encryptedData, 0644)
+}
+
 func LoadAccounts(password string) (models.StorageData, error) {
 	var storageData models.StorageData
 
@@ -160,7 +174,7 @@ func GetAccount(name, password string) (models.Account, error) {
 	storageData, err := LoadAccounts(password)
 
 	if err != nil {
-		return models.Account{}, nil
+		return models.Account{}, err
 	}
 
 	account, exists := storageData.Accounts[name]
@@ -169,4 +183,22 @@ func GetAccount(name, password string) (models.Account, error) {
 	}
 
 	return account, nil
+}
+
+func DeleteAccount(name, password string) error {
+	storageData, err := LoadAccounts(password)
+
+	if err != nil {
+		return err
+	}
+
+	_, exists := storageData.Accounts[name]
+
+	if !exists {
+		return errors.New("conta não encontrada")
+	}
+
+	delete(storageData.Accounts, name)
+
+	return SaveAccounts(storageData, password)
 }
