@@ -6,8 +6,8 @@ import (
 
 var AccountCmd = &cobra.Command{
 	Use:   "account",
-	Short: "Gerencie suas contas associadas a tokens TOTP",
-	Long:  "Comandos para adicionar, remover e atualizar contas utilizadas na geração de códigos TOTP.",
+	Short: "Gerencie contas vinculadas a TOTP",
+	Long:  "Adicione, remova ou edite contas usadas na geração de códigos TOTP.",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
