@@ -13,8 +13,8 @@ var copyName string
 
 var copyCmd = &cobra.Command{
 	Use:   "copy",
-	Short: "Copia um código TOTP sem exibir",
-	Long:  "Gera um código TOTP e copia automaticamente para a área de transferência.",
+	Short: "Gere e copie um código TOTP",
+	Long:  "Gere um código TOTP, visualize no terminal e tenha ele copiado automaticamente para a área de transferência.",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.HandleError(utils.ValidateServiceName(copyName))
 
