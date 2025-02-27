@@ -1,4 +1,4 @@
-package cmd
+package account
 
 import (
 	"fmt"
@@ -10,14 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var setupName string
+var addName string
 
-var setupCmd = &cobra.Command{
-	Use:   "setup",
+var addCmd = &cobra.Command{
+	Use:   "add",
 	Short: "Adiciona uma nova conta TOTP",
 	Long:  "Cadastra um novo serviço TOTP, armazenando sua chave de forma segura.",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.HandleError(utils.ValidateServiceName(setupName))
+		utils.HandleError(utils.ValidateServiceName(addName))
 
 		secret, err := utils.PromptSecret()
 		utils.HandleError(err)
@@ -28,7 +28,7 @@ var setupCmd = &cobra.Command{
 		utils.HandleError(utils.ValidatePassword(password))
 
 		account := models.Account{
-			Name:      setupName,
+			Name:      addName,
 			Secret:    secret,
 			CreatedAt: time.Now(),
 		}
@@ -39,6 +39,6 @@ var setupCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(setupCmd)
-	setupCmd.Flags().StringVarP(&setupName, "name", "n", "", "Nome da conta (ex: gitlab)")
+	AccountCmd.AddCommand(addCmd)
+	addCmd.Flags().StringVarP(&addName, "name", "n", "", "Nome da conta (ex: gitlab)")
 }
