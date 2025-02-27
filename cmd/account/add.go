@@ -40,5 +40,5 @@ var addCmd = &cobra.Command{
 
 func init() {
 	AccountCmd.AddCommand(addCmd)
-	addCmd.Flags().StringVarP(&addName, "name", "n", "", "Nome da conta (ex: gitlab)")
+	addCmd.Flags().StringVarP(&addName, "name", "n", "", "Nome da conta a ser cadastrada (ex: gitlab)")
 }
