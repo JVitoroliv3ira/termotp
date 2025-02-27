@@ -9,8 +9,8 @@ import (
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Exibe a versão atual do TermOTP",
-	Long:  "Mostra a versão atual do TermOTP instalada no sistema.",
+	Short: "Exiba a versão do TermOTP",
+	Long:  "Mostre a versão atual do TermOTP instalada no sistema.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(version.GetVersion())
 	},
