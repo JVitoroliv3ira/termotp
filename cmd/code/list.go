@@ -9,8 +9,8 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "Lista todas as contas e seus códigos TOTP",
-	Long:  "Exibe todas as contas cadastradas, atualizando os códigos TOTP em tempo real.",
+	Short: "Liste todas as contas e códigos TOTP",
+	Long:  "Exiba todas as contas cadastradas com seus códigos TOTP atualizados em tempo real.",
 	Run: func(cmd *cobra.Command, args []string) {
 		password, err := utils.PromptPassword()
 		utils.HandleError(err)
