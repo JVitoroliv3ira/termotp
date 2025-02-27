@@ -14,8 +14,8 @@ var addName string
 
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Adiciona uma nova conta TOTP",
-	Long:  "Cadastra um novo serviço TOTP, armazenando sua chave de forma segura.",
+	Short: "Adicione uma nova conta TOTP",
+	Long:  "Cadastre uma nova conta TOTP e armazene sua chave com segurança.",
 	Run: func(cmd *cobra.Command, args []string) {
 		utils.HandleError(utils.ValidateServiceName(addName))
 
