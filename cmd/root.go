@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/JVitoroliv3ira/termotp/cmd/account"
+	"github.com/JVitoroliv3ira/termotp/cmd/code"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +16,11 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(account.AccountCmd)
+	rootCmd.AddCommand(code.CodeCmd)
 }
 
 func Execute() {
