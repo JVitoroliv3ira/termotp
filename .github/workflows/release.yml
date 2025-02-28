@@ -69,52 +69,62 @@ jobs:
           body: |
             # 🚀 TermOTP - Versão ${{ github.ref_name }}
 
-            **TermOTP** é um gerador de códigos TOTP no terminal, ideal para autenticação 2FA.
+            **TermOTP** é uma ferramenta CLI para gerenciar códigos TOTP de autenticação em dois fatores (**2FA**) com segurança e criptografia.
 
-            ## 📥 Como Instalar
+            ## 📥 Instalação
             
             ### 🔹 **Linux**
-            **⚠️ Importante:** Para instalar corretamente, os seguintes comandos devem ser executados no terminal:
-
             ```sh
-            # Remover versão antiga, se existir
             sudo rm -f /usr/local/bin/totp
-
-            # Baixar a versão mais recente do TermOTP
             wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/totp-linux-amd64 -O totp
-
-            # Dar permissão de execução ao binário
             chmod +x totp
-
-            # Mover o executável para um local acessível globalmente (precisa de sudo)
             sudo mv totp /usr/local/bin/
             ```
-
-            **Agora você pode executar `totp` de qualquer lugar no terminal!** 🚀
+            ✅ **Agora você pode rodar `totp` de qualquer lugar no terminal!**
 
             ### 🔹 **Windows**
-            **⚠️ Importante:** Para instalar, execute o PowerShell como **Administrador** antes de rodar os comandos abaixo!
-
+            Abra o **PowerShell como Administrador** e execute:  
             ```powershell
-            # Remover versão antiga, se existir
             Remove-Item "C:\Program Files\TermOTP\totp.exe" -ErrorAction SilentlyContinue
-
-            # Criar pasta de instalação (caso ainda não exista)
             mkdir "C:\Program Files\TermOTP" -ErrorAction SilentlyContinue
-
-            # Baixar a versão mais recente do TermOTP
             Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/totp-windows-amd64.exe" -OutFile "C:\Program Files\TermOTP\totp.exe"
-
-            # Adicionar TOTP ao PATH do sistema
             [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Program Files\TermOTP", [System.EnvironmentVariableTarget]::Machine)
             ```
+            ✅ **Agora reinicie o terminal e rode `totp` de qualquer lugar!**
 
-            **Agora reinicie o terminal e rode `totp` de qualquer lugar!** 🚀
+            ## 🚀 Como Usar
+            ```sh
+            totp --help
+            ```
 
-            ## 📖 Como Usar o TermOTP
-            - **Adicionar uma conta**: `totp setup --name google`
-            - **Listar códigos TOTP**: `totp list`
-            - **Copiar um código para o clipboard**: `totp copy --name google`
+            ### 📂 Gerenciamento de Contas
+            ```sh
+            totp account add -n gitlab
+            totp account delete -n google
+            ```
+
+            ### 🔢 Gerenciamento de Códigos
+            ```sh
+            totp code generate -n github
+            totp code copy -n github
+            totp code list
+            ```
+
+            ### 📦 Outros Comandos
+            ```sh
+            totp version
+            ```
+
+            📖 Para mais detalhes sobre um comando específico, use:  
+            ```sh
+            totp <comando> --help
+            ```
+            Exemplo:
+            ```sh
+            totp account --help
+            ```
+
+            Para um guia completo, acesse a **[documentação oficial](https://github.com/JVitoroliv3ira/termotp/wiki)**.
 
             🔹 *Se curtiu, deixa uma ⭐ no repositório!*
           files: artifacts/**

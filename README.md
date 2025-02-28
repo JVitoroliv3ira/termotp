@@ -51,21 +51,40 @@ Invoke-WebRequest -Uri "https://github.com/JVitoroliv3ira/termotp/releases/lates
 
 ---
 
-## **🚀 Como Usar**
-Após instalar o **TermOTP**, você pode rodar o seguinte comando para ver todas as opções disponíveis:
-
+## 🚀 Como Usar
+Para ver todas as opções disponíveis, execute:  
 ```sh
 totp --help
 ```
 
-### **Comandos Disponíveis**
-- **Gerar um código TOTP:** `totp generate`
-- **Copiar um código sem exibir:** `totp copy`
-- **Listar todas as contas e códigos:** `totp list`
-- **Adicionar uma nova conta:** `totp setup`
-- **Ver a versão instalada:** `totp version`
+### 📂 Gerenciamento de Contas
+```sh
+totp account add -n gitlab
+totp account delete -n google
+```
 
-Para mais detalhes sobre os comandos, acesse a **[documentação completa](https://github.com/JVitoroliv3ira/termotp/wiki)**.
+### 🔢 Gerenciamento de Códigos
+```sh
+totp code generate -n github
+totp code copy -n github
+totp code list
+```
+
+### 📦 Outros Comandos
+```sh
+totp version
+```
+
+📖 Para mais detalhes sobre um comando específico, use:  
+```sh
+totp <comando> --help
+```
+Exemplo:
+```sh
+totp account --help
+```
+
+Para um guia completo, acesse a **[documentação oficial](https://github.com/JVitoroliv3ira/termotp/wiki)**.
 
 ---
 
