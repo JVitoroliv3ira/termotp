@@ -117,6 +117,10 @@ func SaveAccount(account models.Account, password string) error {
 		storageData = models.StorageData{Accounts: make(map[string]models.Account)}
 	}
 
+	if _, exists := storageData.Accounts[account.Name]; exists {
+		return errors.New("uma conta com este nome já existe")
+	}
+
 	storageData.Accounts[account.Name] = account
 
 	jsonData, err := json.Marshal(storageData)
