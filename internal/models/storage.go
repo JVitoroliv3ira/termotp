@@ -6,6 +6,12 @@ type StorageData struct {
 	Accounts map[string]Account `json:"accounts"`
 }
 
+func (s *StorageData) Init() {
+	if s.Accounts == nil {
+		s.Accounts = make(map[string]Account)
+	}
+}
+
 func (s *StorageData) Exists(name string) bool {
 	_, exists := s.Accounts[name]
 
@@ -35,7 +41,7 @@ func (s *StorageData) GetAccount(name string) (Account, error) {
 	return account, nil
 }
 
-func (s *StorageData) DeleteAccount(name, password string) error {
+func (s *StorageData) DeleteAccount(name string) error {
 	if !s.Exists(name) {
 		return errors.New("conta não encontrada")
 	}
