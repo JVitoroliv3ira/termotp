@@ -8,9 +8,13 @@ import (
 	"golang.org/x/term"
 )
 
+var readPasswordFunc = func(fd int) ([]byte, error) {
+	return term.ReadPassword(fd)
+}
+
 func PromptHiddenInput(prompt string) (string, error) {
 	fmt.Print(prompt)
-	byteInput, err := term.ReadPassword(int(syscall.Stdin))
+	byteInput, err := readPasswordFunc(int(syscall.Stdin))
 	fmt.Println()
 
 	if err != nil {
