@@ -6,8 +6,10 @@ import (
 	"github.com/pquerna/otp/totp"
 )
 
+var generateTOTPFunc = totp.GenerateCode
+
 func GenerateTOTP(secret string) (string, int, error) {
-	code, err := totp.GenerateCode(secret, time.Now())
+	code, err := generateTOTPFunc(secret, time.Now())
 	if err != nil {
 		return "", 0, err
 	}
