@@ -16,10 +16,9 @@ var listCmd = &cobra.Command{
 		utils.HandleError(err)
 		utils.HandleError(utils.ValidatePassword(password))
 
-		accounts, err := storage.LoadAccounts(password)
+		accounts, err := storage.LoadEncrypted(password)
 		utils.HandleError(err)
-
-		totp.ShowTOTPList(accounts)
+		totp.ShowTOTPList(*accounts)
 	},
 }
 
