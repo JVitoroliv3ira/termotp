@@ -2,8 +2,10 @@ package utils
 
 import "log"
 
+var logFatalFunc = log.Fatal
+
 func HandleError(err error) {
 	if err != nil {
-		log.Fatal("erro: ", err)
+		logFatalFunc("erro: ", err)
 	}
 }
