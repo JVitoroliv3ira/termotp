@@ -21,7 +21,11 @@ var deleteCmd = &cobra.Command{
 		utils.HandleError(err)
 		utils.HandleError(utils.ValidatePassword(password))
 
-		storage.DeleteAccount(deleteName, password)
+		accounts, err := storage.LoadEncrypted(password)
+		utils.HandleError(err)
+		utils.HandleError(accounts.DeleteAccount(deleteName))
+		utils.HandleError(storage.SaveEncrypted(accounts, password))
+
 		fmt.Printf("\nConta '%s' removida com sucesso!\n", deleteName)
 	},
 }
