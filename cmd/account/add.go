@@ -33,7 +33,11 @@ var addCmd = &cobra.Command{
 			CreatedAt: time.Now(),
 		}
 
-		utils.HandleError(storage.SaveAccount(account, password))
+		accounts, err := storage.LoadEncrypted(password)
+		utils.HandleError(err)
+		utils.HandleError(accounts.AddAccount(account))
+		utils.HandleError(storage.SaveEncrypted(accounts, password))
+
 		fmt.Printf("\nConta '%s' cadastrada e armazenada com segurança!\n", account.Name)
 	},
 }
