@@ -22,9 +22,10 @@ var generateCmd = &cobra.Command{
 		utils.HandleError(err)
 		utils.HandleError(utils.ValidatePassword(password))
 
-		account, err := storage.GetAccount(generateName, password)
+		accounts, err := storage.LoadEncrypted(password)
 		utils.HandleError(err)
-
+		account, err := accounts.GetAccount(generateName)
+		utils.HandleError(err)
 		code, secondsRemaining, err := totp.GenerateTOTP(account.Secret)
 		utils.HandleError(err)
 
