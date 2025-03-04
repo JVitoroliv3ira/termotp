@@ -10,6 +10,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func AddAccount(name, secret, password string) error {
+	if err := utils.ValidateServiceName(name); err != nil {
+		return err
+	}
+	if err := utils.ValidateServiceSecret(secret); err != nil {
+		return err
+	}
+	if err := utils.ValidatePassword(password); err != nil {
+		return err
+	}
+
+	account := models.Account{
+		Name:      name,
+		Secret:    secret,
+		CreatedAt: time.Now(),
+	}
+
+	accounts, err := storage.LoadEncrypted(password)
+	if err != nil {
+		return err
+	}
+
+	if err := accounts.AddAccount(account); err != nil {
+		return err
+	}
+
+	if err := storage.SaveEncrypted(accounts, password); err != nil {
+		return err
+	}
+
+	fmt.Printf("\nConta '%s' cadastrada e armazenada com segurança!\n", account.Name)
+	return nil
+}
+
 var addName string
 
 var addCmd = &cobra.Command{
@@ -17,28 +51,13 @@ var addCmd = &cobra.Command{
 	Short: "Adicione uma nova conta TOTP",
 	Long:  "Cadastre uma nova conta TOTP e armazene sua chave com segurança.",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.HandleError(utils.ValidateServiceName(addName))
-
 		secret, err := utils.PromptSecret()
 		utils.HandleError(err)
-		utils.HandleError(utils.ValidateServiceSecret(secret))
 
 		password, err := utils.PromptPassword()
 		utils.HandleError(err)
-		utils.HandleError(utils.ValidatePassword(password))
 
-		account := models.Account{
-			Name:      addName,
-			Secret:    secret,
-			CreatedAt: time.Now(),
-		}
-
-		accounts, err := storage.LoadEncrypted(password)
-		utils.HandleError(err)
-		utils.HandleError(accounts.AddAccount(account))
-		utils.HandleError(storage.SaveEncrypted(accounts, password))
-
-		fmt.Printf("\nConta '%s' cadastrada e armazenada com segurança!\n", account.Name)
+		utils.HandleError(AddAccount(addName, secret, password))
 	},
 }
 
