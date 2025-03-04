@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
 
+	"github.com/JVitoroliv3ira/termotp/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -14,10 +14,7 @@ var updateCmd = &cobra.Command{
 	Short: "Atualize o TermOTP",
 	Long:  "Verifique e instale a versão mais recente do TermOTP disponível.",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := runUpdate(); err != nil {
-			fmt.Printf("Erro ao atualizar: %v\n", err)
-			os.Exit(1)
-		}
+		utils.HandleError(runUpdate())
 	},
 }
 
