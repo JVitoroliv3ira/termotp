@@ -7,6 +7,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func ListTOTP(password string) error {
+	if err := utils.ValidatePassword(password); err != nil {
+		return err
+	}
+
+	accounts, err := storage.LoadEncrypted(password)
+	if err != nil {
+		return err
+	}
+
+	totp.ShowTOTPList(*accounts)
+	return nil
+}
+
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Liste todas as contas e códigos TOTP",
@@ -14,11 +28,8 @@ var listCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		password, err := utils.PromptPassword()
 		utils.HandleError(err)
-		utils.HandleError(utils.ValidatePassword(password))
 
-		accounts, err := storage.LoadEncrypted(password)
-		utils.HandleError(err)
-		totp.ShowTOTPList(*accounts)
+		utils.HandleError(ListTOTP(password))
 	},
 }
 
