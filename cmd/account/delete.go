@@ -8,6 +8,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func DeleteAccount(name, password string) error {
+	if err := utils.ValidateServiceName(name); err != nil {
+		return err
+	}
+	if err := utils.ValidatePassword(password); err != nil {
+		return err
+	}
+
+	accounts, err := storage.LoadEncrypted(password)
+	if err != nil {
+		return err
+	}
+
+	if err := accounts.DeleteAccount(name); err != nil {
+		return err
+	}
+
+	if err := storage.SaveEncrypted(accounts, password); err != nil {
+		return err
+	}
+
+	fmt.Printf("\nConta '%s' removida com sucesso!\n", name)
+	return nil
+}
+
 var deleteName string
 
 var deleteCmd = &cobra.Command{
@@ -15,18 +40,10 @@ var deleteCmd = &cobra.Command{
 	Short: "Exclui uma conta TOTP",
 	Long:  "Remove uma conta TOTP do armazenamento.",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.HandleError(utils.ValidateServiceName(deleteName))
-
 		password, err := utils.PromptPassword()
 		utils.HandleError(err)
-		utils.HandleError(utils.ValidatePassword(password))
 
-		accounts, err := storage.LoadEncrypted(password)
-		utils.HandleError(err)
-		utils.HandleError(accounts.DeleteAccount(deleteName))
-		utils.HandleError(storage.SaveEncrypted(accounts, password))
-
-		fmt.Printf("\nConta '%s' removida com sucesso!\n", deleteName)
+		utils.HandleError(DeleteAccount(deleteName, password))
 	},
 }
 
