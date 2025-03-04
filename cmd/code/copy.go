@@ -9,6 +9,38 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func CopyTOTP(name, password string) error {
+	if err := utils.ValidateServiceName(name); err != nil {
+		return err
+	}
+	if err := utils.ValidatePassword(password); err != nil {
+		return err
+	}
+
+	accounts, err := storage.LoadEncrypted(password)
+	if err != nil {
+		return err
+	}
+
+	account, err := accounts.GetAccount(name)
+	if err != nil {
+		return err
+	}
+
+	code, secondsRemaining, err := totp.GenerateTOTP(account.Secret)
+	if err != nil {
+		return err
+	}
+
+	if err := utils.CopyToClipboard(code); err != nil {
+		return err
+	}
+
+	fmt.Printf("Código TOTP para a conta [%s]: %s\n", account.Name, code)
+	fmt.Printf("Este código foi copiado com sucesso e é válido por %d %s.\n", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
+	return nil
+}
+
 var copyName string
 
 var copyCmd = &cobra.Command{
@@ -16,22 +48,10 @@ var copyCmd = &cobra.Command{
 	Short: "Gere e copie um código TOTP",
 	Long:  "Gere um código TOTP, visualize no terminal e tenha ele copiado automaticamente para a área de transferência.",
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.HandleError(utils.ValidateServiceName(copyName))
-
 		password, err := utils.PromptPassword()
 		utils.HandleError(err)
-		utils.HandleError(utils.ValidatePassword(password))
 
-		accounts, err := storage.LoadEncrypted(password)
-		utils.HandleError(err)
-		account, err := accounts.GetAccount(copyName)
-		utils.HandleError(err)
-		code, secondsRemaining, err := totp.GenerateTOTP(account.Secret)
-		utils.HandleError(err)
-		utils.HandleError(utils.CopyToClipboard(code))
-
-		fmt.Printf("Código TOTP para a conta [%s]: %s\n", account.Name, code)
-		fmt.Printf("Este código foi copiado com sucesso e é válido por %d %s.\n", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
+		utils.HandleError(CopyTOTP(copyName, password))
 	},
 }
 
