@@ -20,14 +20,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.24
+          go-version: 1.20
           check-latest: true
 
       - name: Install dependencies
         run: go mod tidy
 
-      - name: Run tests and generate coverage
-        run: go test ./... -coverprofile=coverage.out
+      - name: Install xclip
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xclip
+
+      - name: Run tests and generate coverage (using Xvfb)
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" go test ./... -coverprofile=coverage.out
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
