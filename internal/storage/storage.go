@@ -38,6 +38,10 @@ func getStoragePath() string {
 
 var storageFile = getStoragePath()
 
+func SetStorageFile(path string) {
+	storageFile = path
+}
+
 func SaveEncrypted(storageData *models.StorageData, password string) error {
 	jsonData, err := json.Marshal(storageData)
 	if err != nil {
