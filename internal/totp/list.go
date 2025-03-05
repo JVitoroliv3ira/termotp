@@ -13,79 +13,33 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func ShowTOTPList(storageData models.StorageData) {
+var cacheTOTP = make(map[string]struct {
+	Code           string
+	ExpirationTime int64
+})
+
+func ShowTOTPList(storageData models.StorageData, sortOption string) {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
 
-	accountNames := make([]string, 0, len(storageData.Accounts))
-	for name := range storageData.Accounts {
-		accountNames = append(accountNames, name)
+	if sortOption != "created" {
+		sortOption = "name"
 	}
-	sort.Strings(accountNames)
 
-	bold := color.New(color.Bold)
-	green := color.New(color.FgGreen)
-	yellow := color.New(color.FgYellow)
-	red := color.New(color.FgRed)
+	fmt.Print("\033[?25l")
+	defer fmt.Print("\033[?25h")
 
 	for {
-		clearScreen()
-		fmt.Println(bold.Sprint("\n CÓDIGOS TOTP"))
+		fmt.Print("\033[H")
+		fmt.Println("\nCÓDIGOS TOTP")
 
-		if len(accountNames) == 0 {
+		if len(storageData.Accounts) == 0 {
 			fmt.Println("\nNenhuma conta cadastrada. Adicione uma conta para gerar códigos TOTP.")
 			return
 		}
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{" CONTA ", " CÓDIGO ", " EXPIRA EM "})
-		table.SetBorder(true)
-		table.SetCenterSeparator("|")
-		table.SetColumnSeparator("|")
-		table.SetRowSeparator("-")
-		table.SetAlignment(tablewriter.ALIGN_CENTER)
-
-		table.SetColMinWidth(0, 15)
-		table.SetColMinWidth(1, 10)
-		table.SetColMinWidth(2, 15)
-		table.SetAutoWrapText(false)
-		table.SetHeaderAlignment(tablewriter.ALIGN_CENTER)
-		table.SetColumnAlignment([]int{
-			tablewriter.ALIGN_CENTER,
-			tablewriter.ALIGN_CENTER,
-			tablewriter.ALIGN_CENTER,
-		})
-		table.SetHeaderLine(true)
-		table.SetRowLine(true)
-		table.SetAutoFormatHeaders(false)
-
-		for _, name := range accountNames {
-			account := storageData.Accounts[name]
-			code, secondsRemaining, err := GenerateTOTP(account.Secret)
-			if err != nil {
-				table.Append([]string{name, "Erro ao gerar", "-"})
-				continue
-			}
-
-			timeText := fmt.Sprintf("%d %s", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
-			if secondsRemaining <= 5 {
-				timeText = red.Sprint(timeText)
-			} else if secondsRemaining <= 10 {
-				timeText = yellow.Sprint(timeText)
-			} else {
-				timeText = green.Sprint(timeText)
-			}
-
-			table.Append([]string{
-				fmt.Sprintf(" %-15s ", name),
-				fmt.Sprintf(" %s ", bold.Sprint(code)),
-				fmt.Sprintf(" %s ", timeText),
-			})
-		}
-
-		table.Render()
-
-		fmt.Println("\nAtualizando... Pressione Ctrl+C para sair.")
+		accountNames := SortAccounts(storageData, sortOption)
+		RenderTOTPTable(storageData, accountNames, sortOption)
 
 		select {
 		case <-stop:
@@ -96,6 +50,78 @@ func ShowTOTPList(storageData models.StorageData) {
 	}
 }
 
-func clearScreen() {
-	fmt.Print("\033[H\033[2J")
+func SortAccounts(storageData models.StorageData, sortOption string) []string {
+	accountNames := make([]string, 0, len(storageData.Accounts))
+	for name := range storageData.Accounts {
+		accountNames = append(accountNames, name)
+	}
+
+	sort.Strings(accountNames)
+
+	return accountNames
+}
+
+func RenderTOTPTable(storageData models.StorageData, accountNames []string, sortOption string) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"CONTA", "CÓDIGO", "EXPIRA EM"})
+	table.SetBorder(true)
+	table.SetCenterSeparator("|")
+	table.SetColumnSeparator("|")
+	table.SetRowSeparator("-")
+	table.SetAlignment(tablewriter.ALIGN_CENTER)
+	table.SetAutoWrapText(false)
+
+	table.SetColMinWidth(0, 15)
+	table.SetColMinWidth(1, 10)
+	table.SetColMinWidth(2, 20)
+
+	bold := color.New(color.Bold)
+	green := color.New(color.FgGreen)
+	yellow := color.New(color.FgYellow)
+	red := color.New(color.FgRed)
+
+	for _, name := range accountNames {
+		account := storageData.Accounts[name]
+		code, secondsRemaining := GetCachedTOTP(account.Secret, name)
+
+		timeText := fmt.Sprintf("%d %s", secondsRemaining, utils.Pluralize("segundo", "segundos", secondsRemaining))
+
+		if secondsRemaining <= 5 {
+			timeText = red.Sprint(timeText)
+		} else if secondsRemaining <= 10 {
+			timeText = yellow.Sprint(timeText)
+		} else {
+			timeText = green.Sprint(timeText)
+		}
+
+		table.Append([]string{name, bold.Sprint(code), timeText})
+	}
+
+	table.Render()
+	fmt.Printf("\nOrdenação atual: %s | Atualizando... Pressione Ctrl+C para sair.\n", sortOption)
+}
+
+func GetCachedTOTP(secret, name string) (string, int) {
+	now := time.Now().Unix()
+
+	if entry, exists := cacheTOTP[name]; exists && entry.ExpirationTime > now {
+		return entry.Code, int(entry.ExpirationTime - now)
+	}
+
+	code, secondsRemaining, err := GenerateTOTP(secret)
+	if err != nil {
+		return "Erro", 30
+	}
+
+	expiration := now + int64(secondsRemaining)
+
+	cacheTOTP[name] = struct {
+		Code           string
+		ExpirationTime int64
+	}{
+		Code:           code,
+		ExpirationTime: expiration,
+	}
+
+	return code, secondsRemaining
 }

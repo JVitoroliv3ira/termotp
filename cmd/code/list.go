@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var listSort string
+
 func ListTOTP(password string) error {
 	if err := utils.ValidatePassword(password); err != nil {
 		return err
@@ -17,7 +19,7 @@ func ListTOTP(password string) error {
 		return err
 	}
 
-	totp.ShowTOTPList(*accounts)
+	totp.ShowTOTPList(*accounts, listSort)
 	return nil
 }
 
@@ -35,4 +37,5 @@ var listCmd = &cobra.Command{
 
 func init() {
 	CodeCmd.AddCommand(listCmd)
+	listCmd.Flags().StringVarP(&listSort, "sort", "s", "", "Define a ordem de exibição: 'name' para ordenar por nome ou 'created' para ordenar por data de criação.")
 }
