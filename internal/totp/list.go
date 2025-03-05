@@ -26,6 +26,7 @@ func ShowTOTPList(storageData models.StorageData, sortOption string) {
 		sortOption = "name"
 	}
 
+	fmt.Print("\033[H\033[J")
 	fmt.Print("\033[?25l")
 	defer fmt.Print("\033[?25h")
 
