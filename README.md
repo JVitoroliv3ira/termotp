@@ -61,6 +61,7 @@ totp --help
 ```sh
 totp account add -n gitlab
 totp account delete -n google
+totp account rename -o gitlab -n github
 ```
 
 ### 🔢 Gerenciamento de Códigos
