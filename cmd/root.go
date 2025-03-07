@@ -6,6 +6,7 @@ import (
 
 	"github.com/JVitoroliv3ira/termotp/cmd/account"
 	"github.com/JVitoroliv3ira/termotp/cmd/code"
+	"github.com/JVitoroliv3ira/termotp/cmd/version"
 	"github.com/spf13/cobra"
 )
 
@@ -21,6 +22,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(account.AccountCmd)
 	rootCmd.AddCommand(code.CodeCmd)
+	rootCmd.AddCommand(version.VersionCmd)
 }
 
 func Execute() {
