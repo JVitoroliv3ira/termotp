@@ -32,13 +32,13 @@ func (s *StorageData) AddAccount(account Account) error {
 	return nil
 }
 
-func (s *StorageData) GetAccount(name string) (Account, error) {
+func (s *StorageData) GetAccount(name string) (*Account, error) {
 	if !s.Exists(name) {
-		return Account{}, errors.New("conta não encontrada")
+		return &Account{}, errors.New("conta não encontrada")
 	}
 
 	account := s.Accounts[name]
-	return account, nil
+	return &account, nil
 }
 
 func (s *StorageData) DeleteAccount(name string) error {
